@@ -1,4 +1,4 @@
-const config = { open: false, formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSc84T6TRStuNDk-1YNP9LhcrE8-35Gyi3uUTy6LfGoVSkEWRA/viewform', entry: 'entry.173012199' };
+const config = { open: true, formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSc84T6TRStuNDk-1YNP9LhcrE8-35Gyi3uUTy6LfGoVSkEWRA/viewform', entry: 'entry.173012199' };
 const vote = document.querySelector('#vote');
 const button = document.querySelector('#continue');
 const confirmation = document.querySelector('#confirmation');
