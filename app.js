@@ -26,6 +26,14 @@ function lockVoting(choice = '') {
   backButton.hidden = true;
   confirmation.hidden = false;
   selection.textContent = 'Voto já registrado neste navegador.';
+
+  modal.hidden = false;
+  modal.querySelector('#modal-title').textContent = 'VOTO CONFIRMADO';
+  modal.querySelector('#modal-choice').textContent = choice || 'Participação registrada';
+  modal.querySelector('.modal-warning').textContent = '✓ Seu voto foi registrado com sucesso!';
+  modal.querySelector('.modal-warning').className = 'modal-warning success-message';
+  modal.querySelector('#modal-continue').hidden = true;
+  modal.querySelector('#modal-change').hidden = true;
 }
 
 const previousVote = localStorage.getItem(config.storageKey);
@@ -42,7 +50,12 @@ vote.addEventListener('change', () => {
   status.textContent = '';
   status.className = '';
   modal.hidden = false;
+  modal.querySelector('#modal-title').textContent = 'Proposta selecionada';
   modal.querySelector('#modal-choice').textContent = selectedChoice;
+  modal.querySelector('.modal-warning').textContent = 'ATENÇÃO: seu voto ainda NÃO foi enviado.';
+  modal.querySelector('.modal-warning').className = 'modal-warning';
+  modal.querySelector('#modal-continue').hidden = false;
+  modal.querySelector('#modal-change').hidden = false;
   modal.querySelector('#modal-continue').focus();
 });
 
