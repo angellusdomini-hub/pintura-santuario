@@ -1,5 +1,5 @@
 const config = {
-  endpoint: 'https://script.google.com/macros/s/AKfycbyDEZW_1rR2nluFi4VwKB3xPIMoW9MlSgjjn2yBE66Ef8xK03qQz-3B_bdVEBUCh35ewQ/exec'
+  endpoint: 'https://script.google.com/macros/s/AKfycbxogglcb-cMjNdwcz2Y96vLYZLcT740-0g6waTdpyLTMXejga34j20OY4QmdKS_AWhsrw/exec'
 };
 
 const vote = document.querySelector('#vote');
