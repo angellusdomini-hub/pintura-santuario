@@ -1,32 +1,82 @@
-const config = { open: true, formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSc84T6TRStuNDk-1YNP9LhcrE8-35Gyi3uUTy6LfGoVSkEWRA/viewform', entry: 'entry.173012199' };
+const config = {
+  endpoint: 'https://script.google.com/macros/s/AKfycbyDEZW_1rR2nluFi4VwKB3xPIMoW9MlSgjjn2yBE66Ef8xK03qQz-3B_bdVEBUCh35ewQ/exec'
+};
+
 const vote = document.querySelector('#vote');
 const button = document.querySelector('#continue');
 const confirmation = document.querySelector('#confirmation');
+const confirmButton = document.querySelector('#confirm-vote');
+const backButton = document.querySelector('#back');
+const status = document.querySelector('#vote-status');
+
+let selectedChoice = null;
+let sending = false;
+
 vote.addEventListener('change', () => {
-  const choice = new FormData(vote).get('proposal');
-  button.disabled = !choice;
-  document.querySelector('#selection').textContent = `Sua escolha: ${choice}`;
+  selectedChoice = new FormData(vote).get('proposal');
+  button.disabled = !selectedChoice;
+  document.querySelector('#selection').textContent = `Sua escolha: ${selectedChoice}`;
   confirmation.hidden = true;
+  status.textContent = '';
 });
+
 vote.addEventListener('submit', event => {
   event.preventDefault();
   if (!vote.reportValidity()) return;
-  const choice = new FormData(vote).get('proposal');
-  document.querySelector('#chosen').textContent = choice;
-  if (config.open && config.formUrl && config.entry) {
-    const url = new URL(config.formUrl);
-    url.searchParams.set('usp', 'pp_url');
-    url.searchParams.set(config.entry, choice);
-    const link = document.querySelector('#google-link');
-    link.href = url.href;
-    link.hidden = false;
-    document.querySelector('#confirmation-text').textContent = 'Confira sua opção no Google Forms e toque em Enviar para registrar seu voto anônimo. O voto só será registrado após esse envio.';
-  }
+
+  selectedChoice = new FormData(vote).get('proposal');
+  document.querySelector('#chosen').textContent = selectedChoice;
+  document.querySelector('#confirmation-text').textContent =
+    'Confira sua escolha. Ao confirmar, seu voto será enviado diretamente e você permanecerá nesta página.';
+  confirmButton.hidden = false;
+  confirmButton.disabled = false;
+  confirmButton.textContent = 'CONFIRMAR MEU VOTO';
+  backButton.hidden = false;
+  status.textContent = '';
   confirmation.hidden = false;
   confirmation.focus();
-  confirmation.scrollIntoView({block:'nearest',behavior:'smooth'});
+  confirmation.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 });
-document.querySelector('#back').addEventListener('click', () => {
+
+confirmButton.addEventListener('click', async () => {
+  if (!selectedChoice || sending) return;
+
+  sending = true;
+  confirmButton.disabled = true;
+  backButton.disabled = true;
+  confirmButton.textContent = 'Enviando voto…';
+  status.textContent = 'Registrando seu voto. Aguarde…';
+
+  try {
+    const body = new URLSearchParams({ voto: selectedChoice });
+
+    await fetch(config.endpoint, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      body
+    });
+
+    document.querySelector('#confirmation-text').textContent =
+      'Obrigado por participar da consulta da nossa comunidade.';
+    status.textContent = 'Voto enviado com sucesso!';
+    confirmButton.hidden = true;
+    backButton.hidden = true;
+
+    vote.querySelectorAll('input, button').forEach(el => el.disabled = true);
+  } catch (error) {
+    status.textContent =
+      'Não foi possível enviar o voto. Verifique sua conexão e tente novamente.';
+    confirmButton.disabled = false;
+    backButton.disabled = false;
+    confirmButton.textContent = 'TENTAR NOVAMENTE';
+  } finally {
+    sending = false;
+  }
+});
+
+backButton.addEventListener('click', () => {
   confirmation.hidden = true;
-  document.querySelector('input:checked').focus();
+  const checked = document.querySelector('input:checked');
+  if (checked) checked.focus();
 });
