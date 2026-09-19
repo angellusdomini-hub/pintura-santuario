@@ -10,6 +10,7 @@ const confirmButton = document.querySelector('#confirm-vote');
 const backButton = document.querySelector('#back');
 const status = document.querySelector('#vote-status');
 const selection = document.querySelector('#selection');
+const modal = document.querySelector('#vote-modal');
 
 let selectedChoice = null;
 let sending = false;
@@ -40,6 +41,9 @@ vote.addEventListener('change', () => {
   confirmation.hidden = true;
   status.textContent = '';
   status.className = '';
+  modal.hidden = false;
+  modal.querySelector('#modal-choice').textContent = selectedChoice;
+  modal.querySelector('#modal-continue').focus();
 });
 
 vote.addEventListener('submit', event => {
@@ -95,6 +99,17 @@ confirmButton.addEventListener('click', async () => {
   } finally {
     sending = false;
   }
+});
+
+document.querySelector('#modal-continue').addEventListener('click', () => {
+  modal.hidden = true;
+  button.focus();
+});
+
+document.querySelector('#modal-change').addEventListener('click', () => {
+  modal.hidden = true;
+  const checked = document.querySelector('input:checked');
+  if (checked) checked.focus();
 });
 
 backButton.addEventListener('click', () => {
