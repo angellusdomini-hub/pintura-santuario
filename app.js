@@ -1,6 +1,6 @@
 const config = {
   endpoint: 'https://script.google.com/macros/s/AKfycbw7g2pc_jE0fJwHwbrv6EScI9NuzZ0JTKFoU2569ysCxS2DfSFzLEezia8rkN0xbFXPSQ/exec',
-  storageKey: 'santuario-voto-enviado-v1'
+  storageKey: 'santuario-voto-enviado-v2'
 };
 
 const vote = document.querySelector('#vote');
