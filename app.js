@@ -116,7 +116,21 @@ confirmButton.addEventListener('click', async () => {
 
 document.querySelector('#modal-continue').addEventListener('click', () => {
   modal.hidden = true;
-  button.focus();
+  if (!selectedChoice || localStorage.getItem(config.storageKey)) return;
+
+  document.querySelector('#chosen').textContent = selectedChoice;
+  document.querySelector('#confirmation-text').textContent =
+    'Confira sua escolha. Depois de confirmar, o voto será registrado e não poderá ser alterado neste navegador.';
+  confirmButton.hidden = false;
+  confirmButton.disabled = false;
+  confirmButton.textContent = 'CONFIRMAR MEU VOTO';
+  backButton.hidden = false;
+  backButton.disabled = false;
+  status.textContent = '';
+  status.className = '';
+  confirmation.hidden = false;
+  confirmation.focus();
+  confirmation.scrollIntoView({ block: 'center', behavior: 'smooth' });
 });
 
 document.querySelector('#modal-change').addEventListener('click', () => {
