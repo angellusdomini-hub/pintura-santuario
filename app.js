@@ -1,5 +1,5 @@
 const config = {
-  endpoint: 'https://script.google.com/macros/s/AKfycbxogglcb-cMjNdwcz2Y96vLYZLcT740-0g6waTdpyLTMXejga34j20OY4QmdKS_AWhsrw/exec'
+  endpoint: 'https://script.google.com/macros/s/AKfycbyQzkaz9LKbJzfF97UgywQgCsBZlWDwl4aH9QPb_6MEIrSSUuogaimZJy21G3ll_kEoXQ/exec'
 };
 
 const vote = document.querySelector('#vote');
@@ -23,7 +23,6 @@ vote.addEventListener('change', () => {
 vote.addEventListener('submit', event => {
   event.preventDefault();
   if (!vote.reportValidity()) return;
-
   selectedChoice = new FormData(vote).get('proposal');
   document.querySelector('#chosen').textContent = selectedChoice;
   document.querySelector('#confirmation-text').textContent =
@@ -40,29 +39,24 @@ vote.addEventListener('submit', event => {
 
 confirmButton.addEventListener('click', async () => {
   if (!selectedChoice || sending) return;
-
   sending = true;
   confirmButton.disabled = true;
   backButton.disabled = true;
   confirmButton.textContent = 'Enviando voto…';
   status.textContent = 'Registrando seu voto. Aguarde…';
-
   try {
     const body = new URLSearchParams({ voto: selectedChoice });
-
     await fetch(config.endpoint, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
       body
     });
-
     document.querySelector('#confirmation-text').textContent =
       'Obrigado por participar da consulta da nossa comunidade.';
     status.textContent = 'Voto enviado com sucesso!';
     confirmButton.hidden = true;
     backButton.hidden = true;
-
     vote.querySelectorAll('input, button').forEach(el => el.disabled = true);
   } catch (error) {
     status.textContent =
